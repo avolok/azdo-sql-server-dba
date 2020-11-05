@@ -1,0 +1,44 @@
+trigger: 
+  branches:
+    include:
+    - master
+    - features/*
+  paths:
+    include:
+    - src/*
+
+
+pool:
+  name: SQL-Team-Pool
+  
+
+# Build Number:
+name: 'dbadb$(Date:yyyyMMdd)$(Rev:.r)'
+
+
+stages:
+
+
+# Build  ------------------------------------------------------------
+
+# Run a build job 
+  - template: templates\stages\build.yaml  
+
+# Deployment: Test environment
+  - template: templates\stages\deploy.yaml
+    parameters:            
+      environment: Test
+      isenabled: true
+      database: dbadb            
+      servers:
+      - ServerA      
+
+# Deployment: Production environment
+  - template: templates\stages\deploy.yaml
+    parameters:            
+      environment: Production      
+      isenabled: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/master') }} #only runs in master
+      database: dbadb            
+      servers:
+      - ServerB
+      - ServerC

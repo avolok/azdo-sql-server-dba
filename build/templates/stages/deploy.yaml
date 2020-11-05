@@ -1,0 +1,46 @@
+parameters:
+- name: database
+  default: 'dba-db'     
+
+- name: servers
+  type: object
+  default: {}
+
+- name: isenabled
+  type: boolean
+  default: false
+
+- name: environment
+  default: test
+
+stages:
+- stage: Deployment_${{ parameters.environment }}
+  condition: and(succeeded(), ne('${{ parameters.isenabled }}', 'false'))
+  displayName: 'Deployment - ${{ parameters.environment }}'
+  
+  
+  jobs:
+  - deployment: 'deployment_dacpac_${{ parameters.environment }}'    
+    displayName: 'Deployment: ${{ parameters.database }}'  
+    environment: 'deployment-${{ parameters.database }}-${{ parameters.environment }}'
+    
+    timeoutInMinutes: 180        # how long to run the job before automatically cancelling
+    cancelTimeoutInMinutes: 3
+
+    strategy: 
+      runOnce:
+        deploy:                 
+          steps:
+
+          - ${{ each server in parameters.servers }}:
+            - task: SqlDacpacDeploymentOnMachineGroup@0
+              displayName: 'Deploy [${{ parameters.database }}] on [${{ server }}]'
+              continueOnError: true 
+              inputs:
+                DacpacFile: '$(Pipeline.Workspace)\_drop\dba-db.dacpac'
+                ServerName: '${{ server }}'
+                DatabaseName: '${{ parameters.database }}'
+                AdditionalArguments: '/p:GenerateSmartDefaults=True'              
+              
+
+          

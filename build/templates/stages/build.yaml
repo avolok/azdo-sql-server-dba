@@ -1,0 +1,29 @@
+stages:
+
+- stage: Build
+  displayName: 'Build Database Project'
+  
+  jobs:  
+  - job: Build
+    displayName: 'Build Code'
+    
+    steps:
+            
+    - task: MSBuild@1
+      displayName: 'Build a project'
+      inputs:
+        solution: 'src/dba-db/dba-db.sqlproj'  
+
+    - task: CopyFiles@2
+      displayName: 'Extract DacPacs'
+      inputs:
+          CleanTargetFolder: true
+          SourceFolder: '$(agent.builddirectory)\s\src\dba-db\bin\Debug\'
+          Contents: '*.dacpac'
+          TargetFolder: '$(build.artifactstagingdirectory)'
+
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish DacPacs'
+      inputs:        
+          targetPath: '$(build.artifactstagingdirectory)'
+          artifact: '_drop'
