@@ -62,6 +62,9 @@
     <Folder Include="Properties"/>
     <Folder Include="dbo"/>
     <Folder Include="dbo\Stored Procedures"/>
+    <Folder Include="dbo\Tables"/>
+    <Folder Include="Scripts"/>
+    <Folder Include="Scripts\JobDelivery"/>
   </ItemGroup>
   <Target Name="AfterClean">
     <Delete Files="$(BaseIntermediateOutputPath)\project.assets.json"/>
@@ -70,5 +73,18 @@
     <Build Include="dbo\Stored Procedures\sp_WhoIsActive.sql">
       <SuppressTSqlWarnings>71502</SuppressTSqlWarnings>
     </Build>
+    <Build Include="dbo\Stored Procedures\usp_job_RunDeployment.sql" />
+    <Build Include="dbo\Stored Procedures\usp_jobs_DeployJob.sql" >
+      <SuppressTSqlWarnings>71562</SuppressTSqlWarnings>
+    </Build>
+    <Build Include="dbo\Tables\Jobs.sql"/>
+    <Build Include="dbo\Tables\JobSteps.sql"/>
+    <Build Include="dbo\Tables\JobSchedules.sql"/>
+    <None Include="Scripts\JobDelivery\Metadata-Jobs.sql"/>
+    <None Include="Scripts\JobDelivery\Metadata-JobSteps.sql"/>
+    <None Include="Scripts\JobDelivery\Metadata-JobSchedules.sql"/>
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Scripts\Script.PostDeployment1.sql"/>
   </ItemGroup>
 </Project>
