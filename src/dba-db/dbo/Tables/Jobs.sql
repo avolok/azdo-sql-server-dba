@@ -5,3 +5,5 @@ CREATE TABLE [dbo].[Jobs](
 	[category_name] [nvarchar](200) NULL,
 	[deployment_mode] [varchar](50) NOT NULL	
 ) ON [PRIMARY]
+GO
+ALTER TABLE dbo.Jobs ADD CONSTRAINT PK_Jobs PRIMARY KEY ([name]) 

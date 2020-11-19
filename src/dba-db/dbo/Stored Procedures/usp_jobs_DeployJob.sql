@@ -85,11 +85,12 @@ FROM dbo.Jobs
 WHERE [name] = @Job_Name
 
 
--- Step 1.4: Create Job Category if missing
+-- Step 1.3: Create Job Category if missing
 IF NOT EXISTS (SELECT name FROM msdb.dbo.syscategories WHERE name=@Job_category_name AND category_class=1)
 	EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=@Job_category_name
 
 
+-- Step 1.4: Remove existing job if required
 IF (@PRC_job_exists = 1 AND @PRC_job_deployment_mode IN ( 'Drop', 'ReCreate') )
 BEGIN
 	PRINT CONCAT('[',@Job_Name,']: Removing the job') 
@@ -97,7 +98,7 @@ BEGIN
 	EXEC msdb.dbo.sp_delete_job  @job_name = @Job_Name; 
 END
 
-
+-- Step 1.5: Create/Update job
 IF ((@PRC_job_exists = 0 AND @PRC_job_deployment_mode IN ('CreateUpdate', 'CreateOnly') ) OR  @PRC_job_deployment_mode IN ('ReCreate') )
 BEGIN
     PRINT CONCAT('[',@Job_Name,']: Creating the job') 
@@ -250,7 +251,7 @@ END
 IF (@PRC_job_deployment_mode IN ('ReCreate') OR (@PRC_job_deployment_mode IN ('CreateOnly') AND @PRC_job_exists = 0 ) )
 BEGIN
 
-	-- Step 3.2: Create job schedule			
+	-- Step 3.1: Create job schedules
 
 	DECLARE ct_JobSchedules CURSOR FOR
 		SELECT 

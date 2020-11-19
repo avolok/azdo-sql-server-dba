@@ -13,3 +13,5 @@ CREATE TABLE [dbo].[JobSteps](
 	[command] [nvarchar](max) NOT NULL,
 	[database_name] [sysname] NOT NULL
 ) ON [PRIMARY]
+GO
+ALTER TABLE dbo.JobSteps ADD CONSTRAINT PK_JobSteps PRIMARY KEY (job_name, step_id) 

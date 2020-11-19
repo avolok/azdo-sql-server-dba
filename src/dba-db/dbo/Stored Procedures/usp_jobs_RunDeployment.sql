@@ -1,4 +1,4 @@
-CREATE PROC dbo.usp_job_RunDeployment
+CREATE PROC dbo.usps_job_RunDeployment
 AS
 DECLARE @Deployment_JobName sysname
 DECLARE @Deployment_Mode varchar(50)

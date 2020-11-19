@@ -13,3 +13,5 @@ CREATE TABLE [dbo].[JobSchedules](
 	[active_start_time] [int] NOT NULL,
 	[active_end_time] [int] NOT NULL
 ) ON [PRIMARY]
+GO
+ALTER TABLE dbo.JobSchedules ADD CONSTRAINT PK_JobShedules PRIMARY KEY ([job_name], schedule_name) 

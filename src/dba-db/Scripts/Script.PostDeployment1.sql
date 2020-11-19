@@ -1,7 +1,7 @@
--- Reload jobs metadata
+-- Load jobs metadata
 :r .\JobDelivery\Metadata-Jobs.sql
 :r .\JobDelivery\Metadata-JobSteps.sql
 :r .\JobDelivery\Metadata-JobSchedules.sql
 
--- Deploy jobs
-EXEC dbo.usp_job_RunDeployment
+-- Trigger deployment of jobs
+EXEC dbo.usp_jobs_RunDeployment

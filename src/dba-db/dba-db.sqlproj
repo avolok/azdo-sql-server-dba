@@ -73,7 +73,7 @@
     <Build Include="dbo\Stored Procedures\sp_WhoIsActive.sql">
       <SuppressTSqlWarnings>71502</SuppressTSqlWarnings>
     </Build>
-    <Build Include="dbo\Stored Procedures\usp_job_RunDeployment.sql" />
+    <Build Include="dbo\Stored Procedures\usp_jobs_RunDeployment.sql" />
     <Build Include="dbo\Stored Procedures\usp_jobs_DeployJob.sql" >
       <SuppressTSqlWarnings>71562</SuppressTSqlWarnings>
     </Build>

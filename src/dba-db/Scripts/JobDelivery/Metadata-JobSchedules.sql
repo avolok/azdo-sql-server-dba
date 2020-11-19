@@ -1,7 +1,6 @@
 -- Load job level metadata
 TRUNCATE TABLE dbo.JobSchedules
 
--- Job: #DBA - Restart interrupted DBA jobs1
 INSERT INTO [dbo].[JobSchedules]
 (
 	[job_name]
@@ -19,11 +18,11 @@ INSERT INTO [dbo].[JobSchedules]
 ,	[active_end_time]
 )
 
--- Job: #DBA - CommandLog Cleanup
+-- Job: Job 1
 
 SELECT 
     'Job 1' as [job_name]
-,	'Daily @ 21:55' as [schedule_name]
+,	'Daily @ 20:00' as [schedule_name]
 ,	1 as [schedule_enabled]
 ,	4 as [freq_type]
 ,	1 as [freq_interval]
