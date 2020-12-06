@@ -1,19 +1,24 @@
--- Load job level metadata
 TRUNCATE TABLE dbo.Jobs
-
 
 INSERT INTO dbo.Jobs (
 	[name]
-,	[enabled]
-,	[description]
 ,	[category_name]
+,	[description]
 ,	[deployment_mode]
 )
-
--- Job: Job 1
+-- Job: dba - cycle errorlog'
 SELECT 
-	N'Job 1' AS [name]
-,	1 AS [enabled]
-,	N'Description of job 1' AS [description]
-,	N'DBA - Maintenance' AS [category_name]
+	N'dba - cycle errorlog' AS [name]
+,	N'DBA Jobs' AS [category_name]
+,	N'Closes and cycles the current error log file by running [sp_cycle_errorlog]' AS [description]
 ,   'CreateUpdate' as [deployment_mode]
+
+UNION ALL
+
+-- Job: dba - clean backup history'
+SELECT 
+	N'dba - clean backup history' AS [name]
+,	N'DBA Jobs' AS [category_name]
+,	N'Reduces the size of the backup and restore history tables by running [sp_cycle_errorlog]' AS [description]
+,   'CreateUpdate' as [deployment_mode]
+

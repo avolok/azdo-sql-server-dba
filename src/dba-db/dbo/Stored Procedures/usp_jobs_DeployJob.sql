@@ -10,7 +10,6 @@ DECLARE @PRC_job_deployment_mode varchar(50)
 
 -- Job level variables:
 DECLARE @jobId BINARY(16)
-DECLARE @Job_Enabled bit
 DECLARE @Job_description nvarchar(2000) 
 DECLARE @Job_category_name nvarchar(4000) 
 DECLARE @Job_owner_login_name sysname 
@@ -76,8 +75,7 @@ END
 -- Step 1.2: Retreive job level metadata
 
 SELECT 
-	@Job_Enabled = [enabled]
-,	@Job_description = [description]
+	@Job_description = [description]
 ,	@Job_category_name = category_name
 ,	@Job_owner_login_name = SUSER_SNAME(0x1)
 ,	@PRC_job_deployment_mode = deployment_mode
@@ -103,8 +101,7 @@ IF ((@PRC_job_exists = 0 AND @PRC_job_deployment_mode IN ('CreateUpdate', 'Creat
 BEGIN
     PRINT CONCAT('[',@Job_Name,']: Creating the job') 
 	EXEC    msdb.dbo.sp_add_job 
-			@job_name= @Job_Name,
-			@enabled=@Job_Enabled, 		
+			@job_name= @Job_Name,				
 			@description=@Job_description,
 			@category_name=@Job_category_name,
 			@owner_login_name=@Job_owner_login_name,
@@ -118,8 +115,7 @@ ELSE IF(@PRC_job_exists = 1 AND @PRC_job_deployment_mode IN ('CreateUpdate') )
 BEGIN
     PRINT CONCAT('[',@Job_Name,']: Updating the job') 
 	EXEC    msdb.dbo.sp_update_job
-			@job_name= @Job_Name,
-			@enabled=@Job_Enabled, 			
+			@job_name= @Job_Name,				
 			@description=@Job_description,
 			@category_name=@Job_category_name
 			
@@ -248,7 +244,7 @@ END
 
     -- Phase 3: Schedules
 
-IF (@PRC_job_deployment_mode IN ('ReCreate') OR (@PRC_job_deployment_mode IN ('CreateOnly') AND @PRC_job_exists = 0 ) )
+IF (@PRC_job_deployment_mode IN ('ReCreate') OR (@PRC_job_deployment_mode IN ('CreateOnly', 'CreateUpdate') AND @PRC_job_exists = 0 ) )
 BEGIN
 
 	-- Step 3.1: Create job schedules
@@ -267,7 +263,8 @@ BEGIN
 		,	[active_end_date]
 		,	[active_start_time]
 		,	[active_end_time]
-		FROM dbo.JobSchedules	
+		FROM dbo.JobSchedules
+		WHERE [job_name] = @job_name
 
 
 
